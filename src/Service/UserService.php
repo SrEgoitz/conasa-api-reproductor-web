@@ -23,7 +23,7 @@ class UserService
     $email = $request->request->get('email');
     $fecha_nacimiento = $request->request->get('fecha_nacimiento');
 
-    if ($nombre == "") {
+    if ($name == "") {
       $mensaje[] = "El campo nombre es obligatorio";
     }
     else {
@@ -71,7 +71,7 @@ class UserService
     return $mensaje;
   }
 
-  public function crearUsuario(Request $request)
+  public function crearUsuario(Request $request) : User
   {
     $usuario = new User();
     $variables = $request->request;
@@ -79,8 +79,70 @@ class UserService
     $usuario->setApellidos($variables->get('apellidos'));
     $usuario->setEmail($variables->get('email'));
     $usuario->setFechaNacimiento(new \DateTime($variables->get('fecha_nacimiento')));
+    $usuario->setPassword($variables->get('password'));
     $this->em->persist($usuario);
     $this->em->flush();
     return $usuario;
   }
+
+  public function getUser(int $userId) : User
+  {
+    if (!is_int($userId)) {
+      return null;
+    }
+    $repository = $this->em->getRepository(User::class);
+    $user = $repository->findOneById($userId);
+    return $user;
+    //return $this->repository->findById($userId);
+    /* $repository = $this->getDoctrine()->getRepository(User::class);
+    $user = $repository->findById($userId);
+ */
+  }
+
+
+  public function changeUser(User $user, Request $request) : User
+  {
+
+    $newUser = new User();
+    $name = $variables->get('nombre');
+    $surname = $variables->get('apellidos');
+    $email = $variables->get('email');
+    $fechaNa =$variables->get('fecha_nacimiento');
+    $pass = $variables->get('password');
+
+    if (is_null($name) || $name == "") {
+      $newUser->setNombre($user->getNombre());
+    }else{
+      $newUser->setNombre($name);
+    }
+    
+    if (is_null($surname) || $surname == "") {
+      $newUser->setApellidos($user->getApellidos());
+    }else{
+      $newUser->setApellidos($surname);
+    }
+
+    if (is_null($email) || $email == "") {
+      $newUser->setEmail($user->getEmail());
+    }else{
+      $newUser->setEmail($name);
+    }
+
+    if (is_null($fechaNa) || $fechaNa == "") {
+      $newUser->setFechaNacimiento($user->getFechaNacimiento());
+    }else{
+      $newUser->setFechaNacimiento(new \DateTime($fechaNa));
+    }
+
+    if (is_null($pass) || $pass == "") {
+      $newUser->setPassword($user->getPassword());
+    }else{
+      $newUser->setPassword($pass);
+    }
+
+    $this->em->flush();
+    return $newUser;
+  }
+
+  
 }

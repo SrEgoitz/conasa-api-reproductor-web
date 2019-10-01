@@ -14,6 +14,9 @@ use App\Entity\User;
 use App\Service\UserService;
 use App\Form\UserType;
 
+/**
+ * @Route("/api", name="user_api")
+ */
 class UserController extends FOSRestController
 {
     /**
@@ -25,7 +28,7 @@ class UserController extends FOSRestController
     {
         return new JsonResponse(
             [
-                'message' => 'Bienvenido al api rest de Iñaki',
+                'message' => 'Bienvenido al api rest de Egoitz',
             ],
             JsonResponse::HTTP_OK
         );    
@@ -33,7 +36,7 @@ class UserController extends FOSRestController
 
     /**
      * 
-     * @Route("/user", name="user_post", methods={"POST"})
+     * @Route("/users", name="user_post", methods={"POST"})
      *
      */
     public function postUserAction(Request $request, UserService $userService, ValidatorInterface $validator)
@@ -45,8 +48,12 @@ class UserController extends FOSRestController
 
         $errors = $validator->validate($form);
         if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return new JsonResponse($errorsString, JsonResponse::HTTP_BAD_REQUEST);
+            //$errorsString = (string) $errors;
+
+            return new JsonResponse(['errors' => json_decode($this->container->get('jms_serializer')
+            ->serialize($errors, 'json'))], JsonResponse::HTTP_BAD_REQUEST);
+            
+            //return new JsonResponse($errorsString, JsonResponse::HTTP_BAD_REQUEST);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -58,6 +65,67 @@ class UserController extends FOSRestController
         
         }
     }
+
+    /**
+     * @Route("/user/{userId}", name="user_get",  methods={"GET"})
+     */
+    public function getUserAction(int $userId, UserService $userService)
+    {
+
+        try{
+            $user = $userService->getUser($userId);
+        } catch(\Exception $e) {
+            
+        }
+       /*$repository = $this->getDoctrine()->getRepository(User::class);
+       $user = $repository->findById($userId);*/
+        
+
+       return new JsonResponse(json_decode($this->container->get('jms_serializer')
+            ->serialize($user, 'json')), Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/user/{userId}", name="user_put", methods={"PUT"})
+     */
+    public function editUserAction(int $userId, Request $request){
+        
+        
+        try{
+            $user = $userService->getUser($userId);
+        } catch(\Exception $e) {
+                  
+        }
+        
+       
+        if ($newUser) {
+            $newUser = $userService->changeUser($user, $repository);
+        }
+        return new JsonResponse(json_decode($this->container->get('jms_serializer')
+            ->serialize($newUser, 'json')), Response::HTTP_OK);
+    }
+
+
+    /**
+     * @Route("/user/{userId}", name="user_delete", methods={"DELETE"})
+     */
+    public function deleteUserAction(int $userId){
+        try{
+            $user = $userService->getUser($userId);
+        } catch(\Exception $e) {
+            
+        }
+
+        if($user){
+            $repository->delete($user);
+        }
+
+        return new JsonResponse(json_decode($this->container->get('jms_serializer')
+            ->serialize($user, 'json')), Response::HTTP_OK);
+    }
+
+
+
 
     /**
      * @param Request $request
