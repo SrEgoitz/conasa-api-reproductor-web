@@ -5,13 +5,15 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email")
+ * @UniqueEntity("email", message="validators.user.email.not_repeat")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -22,36 +24,36 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\NotNull
+     * @Assert\NotBlank(message="validators.user.name.not_blank")
+     * @Assert\NotNull(message="validators.user.name.not_null")
      * @Assert\Length(
      *     min = 2,
      *     max = 20,
-     *     minMessage = "Your first name must be at least 2 characters long",
-     *     maxMessage = "Your first name cannot be longer than 20 characters"
+    *     minMessage = "validators.user.name.lengthMin",
+     *     maxMessage = "validators.user.name.lengthMax"
      * )
      */
     private $nombre;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\NotNull
+     * @Assert\NotBlank(message="validators.user.surname.not_blank")
+     * @Assert\NotNull(message="validators.user.surname.not_null")
      * @Assert\Length(
      *     min = 4,
      *     max = 50,
-     *     minMessage = "Your surname must be at least {{ limit }} characters long",
-     *     maxMessage = "Your surname cannot be longer than {{ limit }} characters"
+     *     minMessage = "validators.user.surname.lengthMin",
+     *     maxMessage = "validators.user.surname.lengthMax"
      * )
      */
     private $apellidos;
-
+//  "The email {{ value }} is not a valid email."
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\NotNull
+     * @Assert\NotBlank(message="validators.user.email.not_blank")
+     * @Assert\NotNull(message="validators.user.email.not_null")
      * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
+     *     message = "validators.user.email.email",
      *     checkMX = true
      * )
      */
@@ -59,11 +61,31 @@ class User
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
-     * @Assert\NotNull
+     * @Assert\NotBlank(message="validators.user.fechaNa.not_blank")
+     * @Assert\NotNull(message="validators.user.fechaNa.not_null")
+     * @Assert\LessThanOrEqual("today")
      * @Assert\DateTime
      */
     private $fechaNacimiento;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="validators.user.pass.not_blank")
+     * @Assert\NotNull(message="validators.user.pass.not_null")
+     * @Assert\Length(
+     *     min = 5,
+     *     max = 50,
+     *     minMessage = "validators.user.pass.lengthMin",
+     *     maxMessage = "validators.user.pass.lengthMax"
+     * )
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=191, unique=true)
+     * @Assert\NotBlank()
+     */
+    private $username;
 
     public function getId(): ?int
     {
@@ -116,6 +138,44 @@ class User
         $this->fechaNacimiento = $fechaNacimiento;
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getSalt()
+    {
+        // The bcrypt and argon2i algorithms don't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function eraseCredentials()
+    {
     }
     
 }

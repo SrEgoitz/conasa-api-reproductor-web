@@ -1,0 +1,19 @@
+validators:
+    user.name.not_blank: El nombre del usuario no debería estar vacío.
+    user.name.not_null: El nombre del usuario no debería ser nulo.
+    user.surname.not_blank: Los apellidos del usuario no deberían estar vacíos.
+    user.surname.not_null: Los apellidos del usuario no deberían ser nulos.
+    user.email.not_blank: El email del usuario no debería estar vacío.
+    user.email.not_null: El email del usuario no debería ser nulo.
+    user.fechaNa.not_blank: La fecha de nacimiento del usuario no debería estar vacía.
+    user.fechaNa.not_null: La fecha de nacimiento del usuario no debería ser nulo.
+    user.email.not_repeat: El email {value} email ya se ha utilizado.
+    user.name.lengthMin: El nombre del usuario tiene que tener una longitud minima de {{ limit }} letras
+    user.name.lengthMax: El nombre del usuario tiene que tener una longitud maxima de {{ limit }} letras
+    user.surname.lengthMin: Los apellidos del usuario tiene que tener una longitud minima de {{ limit }} letras
+    user.surname.lengthMax: Los apellidos del usuario tiene que tener una longitud maxima de {{ limit }} letras
+    user.email.email: El email {value} no es valido
+    user.pass.not_blank: La contraseña del usuario no debería estar vacía.
+    user.pass.not_null: La contraseña del usuario no debería ser nulo.
+    user.pass.lengthMin: La contraseña del usuario tiene que tener una longitud minima de {{ limit }} letras
+    user.pass.lengthMax: La contraseña del usuario tiene que tener una longitud maxima de {{ limit }} letras
