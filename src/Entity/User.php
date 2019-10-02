@@ -5,13 +5,15 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("email", message="validators.user.email.not_repeat")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -73,11 +75,17 @@ class User
      * @Assert\Length(
      *     min = 5,
      *     max = 50,
-     *     minMessage = "validators.user.surname.lengthMin",
-     *     maxMessage = "validators.user.surname.lengthMax"
+     *     minMessage = "validators.user.pass.lengthMin",
+     *     maxMessage = "validators.user.pass.lengthMax"
      * )
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=191, unique=true)
+     * @Assert\NotBlank()
+     */
+    private $username;
 
     public function getId(): ?int
     {
@@ -137,11 +145,37 @@ class User
         return $this->password;
     }
 
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
     public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getSalt()
+    {
+        // The bcrypt and argon2i algorithms don't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function eraseCredentials()
+    {
     }
     
 }

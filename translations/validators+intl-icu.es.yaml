@@ -7,7 +7,7 @@ validators:
     user.email.not_null: El email del usuario no debería ser nulo.
     user.fechaNa.not_blank: La fecha de nacimiento del usuario no debería estar vacía.
     user.fechaNa.not_null: La fecha de nacimiento del usuario no debería ser nulo.
-    user.email.not_repeat: Este email ya se ha utilizado.
+    user.email.not_repeat: El email {value} email ya se ha utilizado.
     user.name.lengthMin: El nombre del usuario tiene que tener una longitud minima de {{ limit }} letras
     user.name.lengthMax: El nombre del usuario tiene que tener una longitud maxima de {{ limit }} letras
     user.surname.lengthMin: Los apellidos del usuario tiene que tener una longitud minima de {{ limit }} letras

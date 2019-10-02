@@ -7,9 +7,13 @@ validators:
     user.email.not_null: The user's email should not be null.
     user.fechaNa.not_blank: The user's birth date should not be empty.
     user.fechaNa.not_null: The user's birth date should not be null.
-    user.email.not_repeat: This email has already been used.
+    user.email.not_repeat: The email {value} email has already been used.
     user.name.lengthMin: The user's name must have a minimum length of {{ limit }} letters
     user.name.lengthMax: The user's name must have a maximum length of {{ limit }} letters
     user.surname.lengthMin: The user's last name must have a minimum length of {{ limit }} letters
     user.surname.lengthMax: The user's last name must have a maximum length of {{ limit }} letters
     user.email.email: The email {value} is not valid
+    user.pass.not_blank: The user's password should not be empty.
+    user.pass.not_null: The user's password should not be null.
+    user.pass.lengthMin: The user's password must have a minimum length of {{ limit }} letters
+    user.pass.lengthMax: The user's password must have a maximum length of {{ limit }} letters
